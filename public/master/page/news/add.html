@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>创建方案</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">新闻标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="新闻标题不能为空" placeholder="请输入新闻标题" value=""
+                   class="layui-input">
+            <tip>请填写新闻标题。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">描述</label>
+        <div class="layui-input-block">
+            <textarea name="description" placeholder="请输入描述" value="" class="layui-textarea"></textarea>
+
+            <tip>请填写描述。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">描述-英语</label>
+        <div class="layui-input-block">
+            <textarea name="description_english" placeholder="请输入描述" value="" class="layui-textarea"></textarea>
+            <tip>请填写描述。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">描述-西班牙语</label>
+        <div class="layui-input-block">
+            <textarea name="description_spanish" placeholder="请输入描述" value="" class="layui-textarea"></textarea>
+
+            <tip>请填写描述。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类</label>
+        <div class="layui-input-block">
+            <select name="category_id" id="category_id" lay-filter="category_id" lay-verify="required">
+                <option value="0">请选择分类</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品主图/列表图</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="image">上传图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="image_preview">
+                    <p id="image_text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">新闻详情</label>
+        <div class="layui-input-block">
+            <div id="detail" name="content">
+                <p>请输入</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">详情-英语</label>
+        <div class="layui-input-block">
+            <div id="detail_english" name="content_english">
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">详情-西班牙语</label>
+        <div class="layui-input-block">
+            <div id="detail_spanish" name="content_spanish">
+                <p></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/public.js" charset="utf-8"></script>
+<script src="../../model/news.js" charset="utf-8"></script>
+
+
+<script>
+    var layer;
+    var form;
+    var $;
+    var upload;
+    var layedit;
+
+
+    var image = '';
+
+    $(function () {
+        layer = layui.layer;
+
+        init_form();
+
+    });
+
+    function init_cate() {
+        let opt;
+        News.get_cates([],(res)=> {
+            let cate = res.data;
+
+            opt = '<option value="0">请选择分类</option>';
+            for (let c_item of cate) {
+                opt += '<option  value = "' + c_item.id + '">' + c_item.name + '</option>'
+            }
+            $("#category_id").html(opt);
+            form.render('select');
+        })
+
+    }
+
+    function init_form() {
+
+        layui.use(['form', 'upload'], function () {
+            form = layui.form
+            layer = layui.layer
+            $ = layui.$
+            upload = layui.upload
+
+            var image_upload = upload.render({
+                elem: '#image'
+                , url: '/admin/file/upload' //改成您自己的上传接口
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#image_preview').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    console.log(res);
+                    if (res.code === 0) {
+                        layer.msg('上传成功')
+                        image = res.data.fullPath
+                        $('#image_preview').attr('src', res.data.fullPath); //图片链接（base64）
+                        return false;
+                    }
+                    layer.msg(res.message)
+                    return false;
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var image_text = $('#image_text');
+                    image_text.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    image_text.find('.demo-reload').on('click', function () {
+                        image_upload.upload();
+                    });
+                }
+            });
+
+            init_cate();
+
+            init_editor()
+            init_editor_english();
+            init_editor_spanish();
+
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+
+                let form_data = res.field;
+                form_data.image = image;
+                console.log(form_data);
+                form_data.content = editor.txt.html()
+                form_data.content_english = editor_english.txt.html()
+                form_data.content_spanish = editor_spanish.txt.html()
+
+                console.log(form_data);
+
+                Common.create('/admin/news/create', form_data)
+
+                return false;
+            });
+
+        });
+    }
+
+
+    function init_editor() {
+        const E = window.wangEditor
+        editor = new E("#detail")
+        // 或者 const editor = new E(document.getElementById('div1'))
+        editor.config.height = 600
+        editor.config.uploadImgServer = '/admin/file/edit_upload'
+        editor.config.uploadVideoServer = '/admin/file/edit_upload'
+        editor.config.uploadVideoMaxSize = 20 * 1024 * 1024 // 20M
+        editor.config.uploadVideoAccept = ['mp4']
+        editor.config.uploadVideoName = 'file'
+        editor.config.uploadVideoHooks = {
+
+            // 上传视频超时
+            timeout: function(xhr) {
+                console.log('timeout')
+            },
+            // 视频上传并返回了结果，想要自己把视频插入到编辑器中
+            // 例如服务器端返回的不是 { errno: 0, data: { url : '.....'} } 这种格式，可使用 customInsert
+            customInsert: function(insertVideoFn, result) {
+                // result 即服务端返回的接口
+                console.log('customInsert', result)
+
+                // insertVideoFn 可把视频插入到编辑器，传入视频 src ，执行函数即可
+                insertVideoFn(result.data.src)
+            }
+        }
+        editor.config.uploadFileName = 'file';
+        editor.config.pasteFilterStyle = false;
+        editor.config.uploadImgMaxLength = 1;
+        editor.config.uploadImgHooks = {
+            // 上传超时
+            timeout: function (xhr, editor) {
+                layer.msg('上传超时！')
+            },
+            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+            customInsert: function (insertImg, result, editor) {
+                console.log(result);
+                if (result.code === 0) {
+                    var url = result.data.src;
+                    insertImg(url);
+                } else {
+                    layer.msg(result.msg);
+                }
+            }
+        };
+        editor.config.customAlert = function (info) {
+            layer.msg(info);
+        };
+
+        editor.create()
+    }
+
+
+    function init_editor_spanish() {
+        const E = window.wangEditor
+        editor_spanish = new E("#detail_spanish")
+        // 或者 const editor = new E(document.getElementById('div1'))
+        editor_spanish.config.height = 600
+        editor_spanish.config.uploadImgServer = '/admin/file/edit_upload'
+        editor_spanish.config.uploadVideoServer = '/admin/file/edit_upload'
+        editor_spanish.config.uploadVideoMaxSize = 20 * 1024 * 1024 // 20M
+        editor_spanish.config.uploadVideoAccept = ['mp4']
+        editor_spanish.config.uploadVideoName = 'file'
+        editor_spanish.config.uploadVideoHooks = {
+
+            // 上传视频超时
+            timeout: function(xhr) {
+                console.log('timeout')
+            },
+            // 视频上传并返回了结果，想要自己把视频插入到编辑器中
+            // 例如服务器端返回的不是 { errno: 0, data: { url : '.....'} } 这种格式，可使用 customInsert
+            customInsert: function(insertVideoFn, result) {
+                // result 即服务端返回的接口
+                console.log('customInsert', result)
+
+                // insertVideoFn 可把视频插入到编辑器，传入视频 src ，执行函数即可
+                insertVideoFn(result.data.src)
+            }
+        }
+        editor_spanish.config.uploadFileName = 'file';
+        editor_spanish.config.pasteFilterStyle = false;
+        editor_spanish.config.uploadImgMaxLength = 1;
+        editor_spanish.config.uploadImgHooks = {
+            // 上传超时
+            timeout: function (xhr, editor) {
+                layer.msg('上传超时！')
+            },
+            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+            customInsert: function (insertImg, result, editor) {
+                console.log(result);
+                if (result.code === 0) {
+                    var url = result.data.src;
+                    insertImg(url);
+                } else {
+                    layer.msg(result.msg);
+                }
+            }
+        };
+        editor_spanish.config.customAlert = function (info) {
+            layer.msg(info);
+        };
+
+        editor_spanish.create()
+    }
+
+
+    function init_editor_english() {
+        const E = window.wangEditor
+        editor_english = new E("#detail_english")
+        // 或者 const editor = new E(document.getElementById('div1'))
+        editor_english.config.height = 600
+        editor_english.config.uploadImgServer = '/admin/file/edit_upload'
+        editor_english.config.uploadVideoServer = '/admin/file/edit_upload'
+        editor_english.config.uploadVideoMaxSize = 20 * 1024 * 1024 // 20M
+        editor_english.config.uploadVideoAccept = ['mp4']
+        editor_english.config.uploadVideoName = 'file'
+        editor_english.config.uploadVideoHooks = {
+
+            // 上传视频超时
+            timeout: function(xhr) {
+                console.log('timeout')
+            },
+            // 视频上传并返回了结果，想要自己把视频插入到编辑器中
+            // 例如服务器端返回的不是 { errno: 0, data: { url : '.....'} } 这种格式，可使用 customInsert
+            customInsert: function(insertVideoFn, result) {
+                // result 即服务端返回的接口
+                console.log('customInsert', result)
+
+                // insertVideoFn 可把视频插入到编辑器，传入视频 src ，执行函数即可
+                insertVideoFn(result.data.src)
+            }
+        }
+        editor_english.config.uploadFileName = 'file';
+        editor_english.config.pasteFilterStyle = false;
+        editor_english.config.uploadImgMaxLength = 1;
+        editor_english.config.uploadImgHooks = {
+            // 上传超时
+            timeout: function (xhr, editor) {
+                layer.msg('上传超时！')
+            },
+            // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+            customInsert: function (insertImg, result, editor) {
+                console.log(result);
+                if (result.code === 0) {
+                    var url = result.data.src;
+                    insertImg(url);
+                } else {
+                    layer.msg(result.msg);
+                }
+            }
+        };
+        editor_english.config.customAlert = function (info) {
+            layer.msg(info);
+        };
+
+        editor_english.create()
+    }
+
+</script>
+</body>
+</html>

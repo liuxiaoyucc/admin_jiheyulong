@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>全局参数配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layuimini-form > .layui-form-item > .layui-form-label {
+            font-size: 12px;
+        }
+
+        .layui-upload-imgs {
+            width: 200px;
+        }
+
+        .layui-upload-img {
+            width: 50%;
+            /*height: 100px;*/
+        }
+        #qr_code_preview {
+            width: 30%;
+        }
+
+        .info {
+            position: relative;
+            margin-top: -25px;
+            background-color: black;
+            color: white;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            width: 200px;
+            height: 25px;
+            text-align: center;
+            display: none;
+        }
+        .handle {
+            position: relative;
+            background-color: black;
+            color: white;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.5;
+            opacity: 0.5;
+            width: 200px;
+            text-align: right;
+            height: 18px;
+            margin-bottom: -18px;
+            display: none;
+        }
+        .handle i {
+            margin-right: 5px;
+        }
+        .handle i:hover {
+            cursor: pointer;
+        }
+        .file-item {
+            margin: 12px 0 0 15px;
+            padding: 1px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="公司名称不能为空" placeholder="请输入公司名称" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司英文名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="english_name" lay-verify="required" lay-reqtext="公司英文名称" placeholder="请输入公司英文名称" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司西班牙名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="spanish_name" lay-verify="required" lay-reqtext="公司西班牙名称" placeholder="请输入公司英文名称" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司介绍</label>
+        <div class="layui-input-block">
+            <input type="text" name="description"  placeholder="请输入公司介绍" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司介绍-英文</label>
+        <div class="layui-input-block">
+            <input type="text" name="description_english"  placeholder="请输入公司介绍" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司介绍-西班牙语</label>
+        <div class="layui-input-block">
+            <input type="text" name="description_spanish"  placeholder="请输入公司介绍" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">公司地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address"  placeholder="请输入公司地址" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址坐标(经度)</label>
+        <div class="layui-input-block">
+            <input type="text" name="longitude"  placeholder="请输入坐标经度" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">地址坐标(纬度)</label>
+        <div class="layui-input-block">
+            <input type="text" name="latitude"  placeholder="请输入坐标纬度" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">员工人数</label>
+        <div class="layui-input-block">
+            <input type="text" name="employee_number"  placeholder="请输入员工人数" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">处理案件</label>
+        <div class="layui-input-block">
+            <input type="text" name="case_number"  placeholder="请输入处理案件数量" value="" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">胜诉率</label>
+        <div class="layui-input-block">
+            <input type="text" name="success_rate"  placeholder="请输入胜诉率" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">全国咨询热线</label>
+        <div class="layui-input-block">
+            <input type="text" name="phone"  placeholder="请输入全国咨询热线" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机</label>
+        <div class="layui-input-block">
+            <input type="text" name="tel"  placeholder="请输入手机" value="" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱</label>
+        <div class="layui-input-block">
+            <input type="text" name="email"  placeholder="请输入邮箱" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">成立年数</label>
+        <div class="layui-input-block">
+            <input type="number" name="found_year"  placeholder="成立年数" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">排名</label>
+        <div class="layui-input-block">
+            <input type="number" name="rank"  placeholder="排名" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">演示视频</label>
+        <div class="layui-input-block">
+            <video controls='controls' style="margin-top: 10px;max-width: 400px;width: 100%;">
+                <source src="" type='video/mp4' id="video">
+            </video>
+            <p>
+                <input type="text" name="video" id="demo_video" style="display: none">
+                <button type="button" class="layui-btn" id="video_upload_btn">选择视频</button>
+                <span style="color:brown">（支持AVI、mp4、wma、rm、rmvb、flash、mid、3GP格式）</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">LOGO</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="logo">选择图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="logo_preview">
+                    <p id="logo_text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">多图(首页模块)</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="images">多图片上传</button>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                    预览图：
+                    <div class="layui-upload-list" id="images_preview"></div>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">主图(关于我们中展示)</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="main_image">选择图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="main_image_preview">
+                    <p id="main_image_text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">关注我们二维码</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="qr_code">选择图片</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="qr_code_preview">
+                    <p id="qr_code_text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+
+<script src="../../js/request.js" charset="utf-8"></script>
+<script src="../../model/setting.js" charset="utf-8"></script>
+<script src="../../lib/plupload/js/plupload.full.min.js" charset="utf-8"></script>
+
+<script>
+
+    var images;
+
+    var layer;
+    var main_image;
+    var logo
+    var qr_code;
+    $(function () {
+        layer = layui.layer;
+        Setting.site_info((res)=> {
+            console.log(res);
+            init_form(res.data);
+        })
+    });
+
+    function init_form(data) {
+
+        layui.use(['form', 'upload'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.$
+                upload = layui.upload
+
+            var logo_upload = upload.render({
+                elem: '#logo'
+                , url: '/admin/file/upload' //改成您自己的上传接口
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#logo_preview').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    console.log(res);
+                    logo = res.data.fullPath
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var logo_text = $('#logo_text');
+                    logo_text.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    logo_text.find('.demo-reload').on('click', function () {
+                        logo_upload.upload();
+                    });
+                }
+            });
+
+
+            var main_image_upload = upload.render({
+                elem: '#main_image'
+                , url: '/admin/file/upload' //改成您自己的上传接口
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#main_image_preview').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    console.log(res);
+                    main_image = res.data.fullPath
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var main_image_text = $('#main_image_text');
+                    main_image_text.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    main_image_text.find('.demo-reload').on('click', function () {
+                        main_image_upload.upload();
+                    });
+                }
+            });
+            var qr_code_upload = upload.render({
+                elem: '#qr_code'
+                , url: '/admin/file/upload' //改成您自己的上传接口
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#qr_code_preview').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    console.log(res);
+                    qr_code = res.data.fullPath
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var qr_code_text = $('#qr_code_text');
+                    qr_code_text.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    qr_code_text.find('.demo-reload').on('click', function () {
+                        qr_code_upload.upload();
+                    });
+                }
+            });
+
+            //多图片上传
+            upload.render({
+                elem: '#images'
+                ,url: '/admin/file/upload' //改成您自己的上传接口
+                ,multiple: true
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        let images_html = `
+                            <div id="" class="file-item">
+                                <div class="handle"><i class="layui-icon layui-icon-delete"></i></div>
+                                    <img src="${result}" alt="${file.name}" class="layui-upload-imgs">
+                                <div class="info"></div>
+                            </div>
+                        `;
+
+
+
+                        $('#images_preview').append(images_html)
+                    });
+                }
+                ,done: function(res){
+                    //上传完毕
+                    images.push(res.data.fullPath)
+                }
+            });
+
+
+            $(document).on("mouseenter mouseleave", ".file-item", function(event){
+                if(event.type === "mouseenter"){
+                    //鼠标悬浮
+                    $(this).children(".info").fadeIn("fast");
+                    $(this).children(".handle").fadeIn("fast");
+                }else if(event.type === "mouseleave") {
+                    //鼠标离开
+                    $(this).children(".info").hide();
+                    $(this).children(".handle").hide();
+                }
+            });
+            $(document).on("click", ".file-item .handle", function(event){
+                console.log(event);
+                console.log($(this).parent().index());
+                let index = $(this).parent().index();
+                images.splice(index, 1);
+                $(this).parent().remove();
+            });
+
+            // 上传视频
+            let uploader_video = new plupload.Uploader({
+                browse_button: 'video_upload_btn', // 上传按钮
+                url: "/admin/file/upload", //远程上传地址
+                filters: {
+                    max_file_size: '20mb', //最大上传文件大小（格式100b, 10kb, 10mb, 1gb）
+                    mime_types: [//允许文件上传类型
+                        {title: "files", extensions: "mpg,m4v,mp4,flv,3gp,mov,avi,rmvb,mkv,wmv"}
+                    ]
+                },
+                // chunk_size: "500kb", //分片上传文件时，每片文件被切割成的大小，为数字时单位为字节。也可以使用一个带单位的字符串，如"200kb"。当该值为0时表示不使用分片上传功能
+                chunk_size: 0, //分片上传文件时，每片文件被切割成的大小，为数字时单位为字节。也可以使用一个带单位的字符串，如"200kb"。当该值为0时表示不使用分片上传功能
+                multi_selection: false, //true:ctrl多文件上传, false 单文件上传
+                init: {
+                    FilesAdded: function (up, files) { //文件上传前
+                        plupload.each(files, function (file1) {
+                            uploader_video.start();
+                        });
+                    },
+                    UploadProgress: function (up, file) { //上传中，显示进度条
+                        $('#Progress').css('width', file.percent + '%');
+                    },
+                    FileUploaded: function (up, file, info) { //文件上传成功的时候触发
+                        console.log(up)
+                        console.log(file)
+                        console.log(info)
+                        var response = $.parseJSON(info.response);
+                        console.log(response)
+
+                        if (response.code === 0) {
+                            layer.msg('视频上传成功！');
+                            setTimeout(function () {
+                                let url = response.data.fullPath;
+                                console.log(url);
+                                $("#video").show().attr("src", url);
+                                $("#video").parent().get(0).load();
+                                video = url;
+                            }, 1000);
+                        } else {
+                            layer.msg(response.message);
+                            return false;
+                        }
+                    },
+                    Error: function (up, errObject) { //上传出错的时候触发
+                        alert('上传错误！');
+                    }
+                }
+            });
+            uploader_video.init();
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+                let form_data = res.field;
+                form_data.main_image = main_image;
+                form_data.logo = logo;
+
+                form_data.qr_code = qr_code;
+                form_data.environment_images = images.toString();
+
+                console.log(form_data);
+                Setting.update_site_info(form_data)
+                return false;
+            });
+
+            // 初始化设置信息
+            form.val("edit_form", data)
+            video = data.video;
+            $("#video").show().attr("src", video);
+            $("#video").parent().get(0).load();
+
+
+            images = data.environment_images;
+            images = images.split(",");
+            for (let image of images) {
+                $('#images_preview').append(`
+                    <div id="" class="file-item">
+                        <div class="handle"><i class="layui-icon layui-icon-delete"></i></div>
+                            <img src="${image}" class="layui-upload-imgs">
+                        <div class="info"></div>
+                    </div>
+                `)
+            }
+
+
+            $('#main_image_preview').attr('src', data.main_image); //图片链接（base64）
+            $('#logo_preview').attr('src', data.logo); //图片链接（base64）
+            console.log(data.main_image)
+            main_image = data.main_image;
+            logo = data.logo
+
+            $('#qr_code_preview').attr('src', data.qr_code); //图片链接（base64）
+            console.log(data.qr_code)
+            qr_code = data.qr_code;
+        });
+    }
+
+</script>
+</body>
+</html>

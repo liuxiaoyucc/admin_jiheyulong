@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑智慧终端信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">智慧终端标题</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="智慧终端标题不能为空" placeholder="请输入智慧终端标题" value=""
+                   class="layui-input">
+            <tip>请填写智慧终端标题。</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">智慧终端名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="智慧终端名称不能为空" placeholder="请输入智慧终端名称" value=""
+                   class="layui-input">
+            <tip>请填写智慧终端名称。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">智慧终端介绍</label>
+        <div class="layui-input-block" style="">
+            <div id="detail" name="content">
+                <p>写入内容</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/public.js" charset="utf-8"></script>
+
+
+<script>
+    var layer;
+    var form;
+    var $;
+    var upload;
+
+
+    var terminal_id;
+    $(function () {
+        layer = layui.layer;
+
+        console.log(getQueryString('terminal_id'));
+        terminal_id = getQueryString('terminal_id');
+        Common.info('/admin/terminal/info', {terminal_id}, (res) => {
+            console.log(res);
+            init_form(res.data);
+        })
+    });
+
+    function init_form(data) {
+
+        layui.use(['form', 'upload'], function () {
+            form = layui.form
+            layer = layui.layer
+            $ = layui.$
+            upload = layui.upload
+
+
+
+
+            const E = window.wangEditor
+            const editor = new E("#detail")
+            // 或者 const editor = new E(document.getElementById('div1'))
+            editor.config.height = 600
+            editor.config.uploadImgServer = '/admin/file/edit_upload'
+            editor.config.uploadVideoServer = '/admin/file/edit_upload'
+            editor.config.uploadVideoMaxSize = 20 * 1024 * 1024 // 20M
+            editor.config.uploadVideoAccept = ['mp4']
+            editor.config.uploadVideoName = 'file'
+            editor.config.uploadVideoHooks = {
+
+                // 上传视频超时
+                timeout: function(xhr) {
+                    console.log('timeout')
+                },
+                // 视频上传并返回了结果，想要自己把视频插入到编辑器中
+                // 例如服务器端返回的不是 { errno: 0, data: { url : '.....'} } 这种格式，可使用 customInsert
+                customInsert: function(insertVideoFn, result) {
+                    // result 即服务端返回的接口
+                    console.log('customInsert', result)
+
+                    // insertVideoFn 可把视频插入到编辑器，传入视频 src ，执行函数即可
+                    insertVideoFn(result.data.src)
+                }
+            }
+            editor.config.uploadFileName = 'file';
+            editor.config.pasteFilterStyle = false;
+            editor.config.uploadImgMaxLength = 1;
+            editor.config.uploadImgHooks = {
+                // 上传超时
+                timeout: function (xhr, editor) {
+                    layer.msg('上传超时！')
+                },
+                // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+                customInsert: function (insertImg, result, editor) {
+                    console.log(result);
+                    if (result.code === 0) {
+                        var url = result.data.src;
+                        insertImg(url);
+                    } else {
+                        layer.msg(result.msg);
+                    }
+                }
+            };
+            editor.config.customAlert = function (info) {
+                layer.msg(info);
+            };
+
+            editor.create()
+
+            editor.txt.html(data.content)
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+
+                let form_data = res.field;
+                form_data.content = editor.txt.html()
+
+
+                var req = {
+                    terminal_id: terminal_id,
+                    terminal_info: form_data
+                };
+
+                console.log(req);
+
+                Common.update('/admin/terminal/update', req)
+
+
+                return false;
+            });
+
+            // 初始化新闻信息
+            form.val("edit_form", {
+                title: data.title,
+                name: data.name,
+            })
+
+        });
+    }
+
+</script>
+</body>
+</html>

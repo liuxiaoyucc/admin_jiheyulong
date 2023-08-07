@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>创建分类</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">专业名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请输入专业名" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/public.js" charset="utf-8"></script>
+
+
+<script>
+    var layer;
+    var form;
+    var $;
+
+    $(function () {
+        layer = layui.layer;
+
+        init_form();
+
+    });
+
+
+    function init_form() {
+
+        layui.use(['form'], function () {
+            form = layui.form
+            layer = layui.layer
+            $ = layui.$
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+                let form_data = res.field;
+                console.log(form_data);
+
+                var req = form_data;
+
+                console.log(req);
+
+                Common.update('/admin/specialist/major_create', req)
+
+                return false;
+            });
+
+        });
+
+
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大禹建设</title>
+    <link rel="stylesheet" href="/resource/pc/css/normalize.css">
+    <link rel="stylesheet" href="/resource/pc/css/index.css">
+    <script src="/resource/pc/js/jquery-1.10.1.min.js"></script>
+    <script src="/resource/pc/js/index.js"></script>
+    <script src="/resource/pc/js/vue.js"></script>
+    <script src="/resource/pc/js/js.cookie.js"></script>
+</head>
+
+<body>
+    <div class="box_a" id="app">
+        <div class="a1">
+            <div class="text">
+                <h6>专家抽取平台</h6>
+                <p>·功能完备--强大的评审专家抽取功能</p>
+                <p>·专业易用--友好的人机交互带来绝佳的用户体验</p>
+            </div>
+        </div>
+        <div class="a2">
+            <div class="box">
+
+                <div class="b1" v-if="is_reg">
+                    <span>企业名</span>
+                    <div>
+                        <img src="/resource/pc/images/a2.png" alt="" srcset="">
+                        <input type="text" v-model="company_name" placeholder="请输入企业名">
+                    </div>
+                </div>
+                <div class="b1">
+                    <span>用户名</span>
+                    <div>
+                        <img src="/resource/pc/images/a2.png" alt="" srcset="">
+                        <input type="text" v-model="username" placeholder="请输入用户名">
+                    </div>
+                </div>
+                <div class="b1">
+                    <span>密码</span>
+                    <div>
+                        <img src="/resource/pc/images/a3.png" alt="" srcset="">
+                        <input type="password" v-model="password" placeholder="请输入密码">
+                    </div>
+                </div>
+                <div class="b2" v-if="!is_reg">
+                    <span>验证码</span>
+                    <div class="c1">
+                        <div class="c2"><input type="text" v-model="captcha"></div>
+                        <div class="c3">
+                            <img width="200px" src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?'+Math.random();"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="height: 40px;" @click="to_reg()">{{link_text}}</div>
+
+                <button class="b3" @click="login">{{button_text}}</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            company_name: '',
+            username: '',
+            password: '',
+            captcha: '',
+
+            is_reg: false,
+
+        },
+        computed: {
+            button_text() {
+                return this.is_reg ? '注册' : '立即登录'
+            },
+            link_text() {
+                return this.is_reg ? '返回登录' : '立即注册'
+            }
+        },
+        created() {
+
+        },
+        methods: {
+            to_reg() {
+                this.is_reg = !this.is_reg;
+            },
+            login() {
+                if (!this.username) {
+                    alert('请填写用户名');
+                    return false
+                }
+                if (!this.password) {
+                    alert('请填写密码');
+                    return false
+                }
+                if (this.is_reg && !this.company_name) {
+                    alert('请填写企业名');
+                    return false
+                }
+                if (!this.is_reg && !this.captcha) {
+                    alert('请填写验证码');
+                    return false
+                }
+
+                if (this.is_reg) { // 注册
+                    $.ajax({
+                        url: "/index/pc/reg",
+                        type: 'POST',
+                        data: {
+                            company_name: this.company_name,
+                            username: this.username,
+                            password: this.password,
+                        },
+                        success: (res) => {
+                            console.log(res)
+                            if (res.code == 0) {
+                                alert(res.msg)
+                            }
+                        }
+                    });
+
+                } else { // 登录
+                    $.ajax({
+                        url: "/index/pc/login",
+                        type: 'POST',
+                        data: {
+                            username: this.username,
+                            password: this.password,
+                            captcha: this.captcha,
+                        },
+                        success: (res) => {
+                            console.log(res)
+                            if (res.code == 0) {
+                                window.location.href = '/index/pc/index'
+                            } else {
+                                alert(res.msg)
+                            }
+                        }
+                    });
+
+                }
+
+
+            }
+        }
+    })
+
+</script>
+
+</html>

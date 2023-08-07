@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大禹建设</title>
+    <link rel="stylesheet" href="/resource/pc/css/normalize.css">
+    <link rel="stylesheet" href="/resource/pc/css/index.css">
+    <script src="/resource/pc/js/jquery-1.10.1.min.js"></script>
+    <script src="/resource/pc/js/index.js"></script>
+    <script src="/resource/pc/js/vue.js"></script>
+    <script src="/resource/pc/js/js.cookie.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <div class="ind_a">
+        <div class="b1"><img src="/resource/pc/images/a7.png" alt="" srcset="">{{user.company_name}}</div>
+        <div class="b2"><img src="/resource/pc/images/a5.png"></div>
+    </div>
+    <div class="main">
+        <div class="ind_b">
+            <div class="a1">
+                <div class="b1">抽取专家</div>
+                <select class="b2" id="major_select">
+                    {foreach $majors as $key=>$vo }
+                    <option value="{$vo['id']}">{$vo['name']}</option>
+                    {/foreach}
+                </select>
+                <input type="text" class="b3" name="number" v-model="number" placeholder="请输入专家人数">
+                <button class="b4" @click="submit">立即抽取</button>
+            </div>
+            <div class="a2">
+                <div class="box">
+                    <ul>
+                        {foreach $specialists as $key=>$vo }
+                        <li>
+                            <div class="b1"><img src="/resource/pc/images/a8.png" alt="" srcset=""> </div>
+                            <div class="b2">{$vo['name']} / {$vo['title']}</div>
+                            <div class="b3">{$vo['majors']}</div>
+                            <div class="b4">{$vo['company']}</div>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="ind_c">
+            <div class="list" v-if="show_list">
+                <div class="item">
+                    <div class="w1">专家姓名</div>
+                    <div class="w2">专业</div>
+                    <div class="w3">职称</div>
+                    <div class="w4">所属单位</div>
+                    <div class="w5">手机号</div>
+                </div>
+
+                <div class="item" v-for="(item, index) in list">
+                    <div class="w1">{{item.name}}</div>
+                    <div class="w2">{{item.majors}}</div>
+                    <div class="w3">{{item.title}}</div>
+                    <div class="w4">{{item.company}}</div>
+                    <div class="w5">{{item.phone}}</div>
+                </div>
+
+            </div>
+            <div class="btns" >
+                <div @click="close" class="on">关闭</div>
+                <div @click="close">重置</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+    $(function () {
+        $(".ind_b .a2 .box").myScroll({
+            speed: 80, //数值越大，速度越慢
+            rowHeight: 42 //li的高度
+        });
+    });
+</script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            show_list: false,
+
+            number: '',
+            list: [],
+
+            user: {},
+        },
+        computed: {
+
+        },
+        created() {
+            let user = Cookies.get('user');
+            if (!user) {
+                window.location.href = '/index/pc/login'
+            }
+            this.user = JSON.parse(user)
+        },
+        methods: {
+            submit() {
+                this.show_list = true;
+                let major_id = $("#major_select").val()
+                $.ajax({
+                    url: "/index/pc/search",
+                    type: 'POST',
+                    data: {
+                        number: this.number,
+                        major_id: major_id
+                    },
+                    success: (res) => {
+                        console.log(res)
+                        if (res.code == 0) {
+                            this.list = res.data
+                        }
+                    }
+                });
+
+            },
+            close() {
+                this.show_list = false
+            }
+        }
+    })
+
+</script>
+
+</html>

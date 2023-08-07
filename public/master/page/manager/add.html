@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>添加管理员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label required">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <tip>填写自己管理账号的名称。</tip>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required" for="password">密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="password" lay-reqText="密码不能为空" lay-verify="required|password" placeholder="请输入密码" autocomplete="off" class="layui-input" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required" for="password">确认密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="repassword" lay-reqText="确认密码不能为空" lay-verify="required|confirmPass" placeholder="请再次输入密码" autocomplete="off" class="layui-input" value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">性别</label>
+        <div class="layui-input-block">
+            <input type="radio" name="sex" value="1" title="男" checked="">
+            <input type="radio" name="sex" value="2" title="女">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">手机</label>
+        <div class="layui-input-block">
+            <input type="number" name="tel" lay-verify="phone" placeholder="请输入手机" value="" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+
+<script src="../../js/request.js" charset="utf-8"></script>
+<script src="../../model/manager.js" charset="utf-8"></script>
+
+<script>
+
+    layui.use(['form'], function () {
+        window.$ = layui.$;
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+
+
+        form.verify({
+            confirmPass:function(value){ // 密码确认校验
+                if($('input[name=password]').val() !== value)
+                    return '两次密码输入不一致！';
+            },
+            tel: function (value) { // 未使用
+                let rule = /^1[3|4|5|6|7|8|9]\d{9}$/;
+                if(!rule.test(value))
+                    return '手机号格式错误！';
+            }
+        });
+
+            //监听提交
+        form.on('submit(saveBtn)', function (data) {
+
+            var data = data.field;
+            console.log(data);
+            // data.password = $.md5(data.password);
+
+            Manager.create(data, ()=> {
+
+            })
+
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

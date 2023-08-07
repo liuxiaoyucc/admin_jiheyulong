@@ -1,0 +1,59 @@
+<div class="footer wow fadeIn">
+    <div class="box">
+        <div class="a1 wow fadeInUp footer-company-info" data-wow-delay="0.2s">
+
+        </div>
+
+        <div class="a2  wow fadeInUp" data-wow-delay="0.4s">
+            <div class="b1">快捷导航<span>Quick navigation</span></div>
+            <div class="b2 custom-header-footer">
+
+            </div>
+        </div>
+
+        <div class="a3 wow fadeInUp qr_code" data-wow-delay="0.6s">
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $.ajax({
+        url: "/index/pc/footer", success: function (result) {
+            console.log(result);
+            init_footer(result);
+        }
+    });
+    function init_footer(footer) {
+
+        let nav_html = '';
+
+        for (let nav of footer.navigate) {
+            nav_html += `
+                    <span><a href="${nav.href}">${nav.name}</a></span>
+                `
+        }
+
+        $('.custom-header-footer').html(nav_html)
+
+
+
+        let company_info = footer.company
+        let company_info_html = `
+            <div class="b1">${company_info.name}</div>
+            <div class="b2">${company_info.english_name}</div>
+            <div class="b3">全国咨询热线</div>
+            <div class="b4">${company_info.phone}</div>
+            <div class="b5">地址：${company_info.address}</div>
+            <div class="b5">邮箱：${company_info.email}</div>
+            <div class="b5">手机：${company_info.tel}</div>
+        `
+
+        $('.footer-company-info').html(company_info_html)
+        $('.qr_code').html(`
+            <img src="${company_info.qr_code}" alt="" srcset="">
+            <p>微信扫码 关注我们</p>
+        `)
+
+    }
+</script>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>创建方案</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">专家姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="专家姓名不能为空" placeholder="请输入专家姓名" value=""
+                   class="layui-input">
+            <tip>请填写专家姓名</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">公司名</label>
+        <div class="layui-input-block">
+            <input type="text" name="company" lay-verify="required" lay-reqtext="公司名不能为空" placeholder="请输入公司名" value=""
+                   class="layui-input">
+            <tip>请填写公司名</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">职称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="required" lay-reqtext="职称不能为空" placeholder="请输入职称" value=""
+                   class="layui-input">
+            <tip>请填写公司</tip>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">手机号</label>
+        <div class="layui-input-block">
+            <input type="text" name="phone" lay-verify="required" lay-reqtext="手机号不能为空" placeholder="请输入手机号" value=""
+                   class="layui-input">
+            <tip>请填写手机号。</tip>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">属性选择</label>
+        <div class="layui-input-block " id="majors_area">
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/public.js" charset="utf-8"></script>
+<script src="../../model/specialist.js" charset="utf-8"></script>
+
+
+<script>
+    var layer;
+    var form;
+    var $;
+    var upload;
+    var layedit;
+
+
+    $(function () {
+        layer = layui.layer;
+
+        init_form();
+
+    });
+
+
+    function init_form() {
+
+        layui.use(['form', 'upload'], function () {
+            form = layui.form
+            layer = layui.layer
+            $ = layui.$
+            upload = layui.upload
+
+
+            init_major();
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+
+                let form_data = res.field;
+                let major_ids = [];
+
+                for (let key in form_data) {
+                    if (~key.indexOf('major_id_')) {
+                        major_ids.push(form_data[key])
+                    }
+                }
+                form_data.major_ids = major_ids.join(',')
+
+                console.log(form_data);
+
+                Common.create('/admin/specialist/create', form_data)
+
+                return false;
+            });
+
+        });
+    }
+    function init_major() {
+
+        Specialist.majors('', res=> {
+            let attrs = res.data;
+            let _html = '';
+
+            for (let attr of attrs) {
+                _html += `<input type="checkbox" name="major_id_${attr.id}" value="${attr.id}" title="${attr.name}">`;
+
+            }
+
+            $("#majors_area").html(_html);
+            form.render();
+        })
+
+    }
+
+
+
+</script>
+</body>
+</html>

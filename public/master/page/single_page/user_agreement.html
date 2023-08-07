@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户协议管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item" style="margin-top: 50px">
+        <label class="layui-form-label">协议详情</label>
+        <div class="layui-input-block" style="width: 500px;height: 700px">
+            <textarea class="layui-textarea" name="agreement" id="agreement" style="display: none">
+
+            </textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">保存</button>
+        </div>
+    </div>
+
+</div>
+<script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+
+<script src="../../js/request.js" charset="utf-8"></script>
+<script src="../../model/setting.js" charset="utf-8"></script>
+
+<script>
+
+    $(function () {
+        Setting.info((res)=> {
+            init_form(res.data);
+        })
+    });
+
+    function init_form(data) {
+
+        layui.use(['form', 'layedit'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.$
+                ,layedit = layui.layedit;
+
+
+            $("#agreement").html(data.user_agreement); // 初始化富文本初始内容
+
+            layedit.set({
+                uploadImage: {
+                    url: '/admin/file/edit_upload', //接口url
+                    type: 'post', //默认post
+                }
+            });
+            var lay_edit_index = layedit.build('agreement', {
+                height: 600
+            });
+
+
+            //监听提交
+            form.on('submit(saveBtn)', function (res) {
+
+                let edit_content = layedit.getContent(lay_edit_index);
+
+                let form_data = res.field;
+                form_data.user_agreement = edit_content;
+                console.log(form_data);
+                Setting.update(form_data)
+                return false;
+            });
+
+            // 初始化表单信息
+            form.val("edit_form", {
+
+            })
+
+        });
+    }
+
+</script>
+</body>
+</html>

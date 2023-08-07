@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+</head>
+
+<body>
+{include file="pc/header"/}
+
+<div id="app">
+    <div class="two_banner img_cover wow fadeIn" style="background-image: url({$banner['image']});">
+        <div class="main">
+            <h6 class="wow fadeInDown">{:lang('word')['message']['title']}<span>/ Online Message</span></h6>
+            <p class="wow fadeInUp"><a href="#">·{:lang('word')['message']['title']}</a></p>
+        </div>
+    </div>
+    <div class="main">
+        <div class="zxly_a">
+            <div class="box wow fadeInUp">
+                <div class="line">
+                    <div class="b1">
+                        <div class="item">
+                            <div class="c1"><img src="/resource/pc/images/icon/a2.png"></div>
+                            <div class="c2">
+                                <input type="text" v-model="name" placeholder="{:lang('word')['message']['name']}">
+                            </div>
+
+                        </div>
+                        <div class="item">
+                            <div class="c1"><img src="/resource/pc/images/icon/a3.png"></div>
+                            <div class="c2">
+                                <input type="text" v-model="phone" placeholder="{:lang('word')['message']['phone']}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="b1">
+                        <div class="item">
+                            <div class="c1"><img src="/resource/pc/images/icon/a4.png"></div>
+                            <div class="c2">
+                                <input type="text" v-model="content"
+                                       placeholder="{:lang('word')['message']['content']}">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="c1"><img src="/resource/pc/images/icon/a5.png"></div>
+                            <div class="c2">
+                                <input type="text" v-model="code" placeholder="{:lang('word')['message']['code']}">
+                            </div>
+                            <div class="c3">
+                                {:captcha_img()}
+                            </div>
+                        </div>
+                    </div>
+                    <button @click="commit()" class="b2">立即提交</button>
+                </div>
+            </div>
+            <div class="text wow fadeInUp">
+                <p>律师(lawyer)是指接受委托或者指定，为当事人提供诉讼代理或者辩护业务等法律服务的人员。<br>
+                    律师须通过法律职业资格考试并依法取得律师执业证书方可执业。<br>
+                    按照工作性质划分，律师可分为专职律师与兼职律师;按照业务范围划分，律师可分为民事律师、刑事律师和行政律师;<br>
+                    按照服务对象和工作身份划分，律师可分为社会律师、公司律师和公职律师。<br>
+                    律师业务主要分为诉讼业务与非诉讼业务。<br>
+                    2021年8月20日，十三届全国人大常委会第三十次会议表决通过《中华人民共和国法律援助法》，<br>
+                    基层法律服务所负有依法提供法律援助的义务</p>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h6>大禹建设 </h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="pc/footer"/}
+
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            name: '',
+            phone: '',
+            content: '',
+            code: '',
+        },
+        created() {
+
+        },
+        methods: {
+            commit() {
+
+                if (!this.name) {
+                    alert('请填写姓名');
+                    return false
+                }
+                if (!this.phone) {
+                    alert('请填写手机号');
+                    return false
+                }
+                if (!this.content) {
+                    alert('请填写内容');
+                    return false
+                }
+                if (!this.code) {
+                    alert('请填写验证码');
+                    return false
+                }
+
+                $.ajax({
+                    url: "/index/pc/leave_message",
+                    type: 'POST',
+                    data: {
+                        name: this.name,
+                        phone: this.phone,
+                        content: this.content,
+                        code: this.code,
+                    },
+                    success: (res) => {
+                        console.log(res)
+                        if (res.code == -1) {
+                            alert('验证码错误');
+                        }
+                        if (res.code == 0) {
+                            alert('提交成功');
+                            location.reload();
+                        }
+                    }
+                });
+
+            }
+        }
+    })
+</script>
+
+</html>

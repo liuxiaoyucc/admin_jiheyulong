@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+{include file="pc/header"/}
+
+<div class="two_banner img_cover" style="background-image: url({$banner['image']});">
+    <div class="main">
+        <h6 class="wow fadeInDown">{:lang('word')['news']['news_title']}<span>/ News center</span></h6>
+        <p class="wow fadeInUp">
+            {foreach $news_cate as $key=> $vo}
+            <a href="/index/pc/news?cate_id={$vo['id']}">·{$vo['name']}</a>
+            {/foreach}
+        </p>
+    </div>
+</div>
+<div class="main">
+    <div class="xwzx_a">
+        <div class="list_c wow fadeInUp">
+            <ul class="clearfix">
+                {foreach $news as $key=>$vo }
+                <li>
+                    <a href="/index/pc/news_detail?news_id={$vo.id}" class="item">
+                        <div class="a1"><span>30 <i>Jan.</i></span></div>
+                        <div class="a2 tc_1">{$vo['title']}</div>
+                        <div class="a3 tc_2">{$vo['description']}</div>
+                    </a>
+                </li>
+                {/foreach}
+
+
+            </ul>
+        </div>
+        {:$news->render()}
+    </div>
+</div>
+{include file="pc/footer"/}
+
+</body>
+
+
+</html>

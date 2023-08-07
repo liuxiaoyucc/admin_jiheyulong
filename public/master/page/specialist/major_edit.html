@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>编辑分类</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-upload-img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .layui-textarea img {
+            max-width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form" lay-filter="edit_form">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">分类名</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" placeholder="请输入分类名" value="" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="../../js/public.js" charset="utf-8"></script>
+
+
+<script>
+    var layer;
+    var form;
+    var $;
+
+    var image = '';
+
+    var major_id;
+    $(function () {
+        layer = layui.layer;
+
+        console.log(getQueryString('major_id'));
+        major_id = getQueryString('major_id');
+        Common.info('/admin/specialist/major_info', {major_id}, (res) => {
+            console.log(res);
+            init_form(res.data);
+        })
+
+    });
+
+
+
+
+
+
+    function init_form(data) {
+
+        layui.use(['form'], function () {
+            form = layui.form
+            layer = layui.layer
+            $ = layui.$
+
+            // 初始化方案信息
+            form.val("edit_form", {
+                name: data.name,
+                name_english: data.name_english,
+                name_spanish: data.name_spanish,
+            })
+
+
+            form.on('submit(saveBtn)', function (res) {
+
+                let form_data = res.field;
+
+                var req = {
+                    major_id: major_id,
+                    major_info: form_data
+                };
+
+                console.log(req);
+
+                Common.update('/admin/specialist/major_update', req)
+
+
+                return false;
+            });
+
+
+        });
+    }
+
+</script>
+</body>
+</html>
